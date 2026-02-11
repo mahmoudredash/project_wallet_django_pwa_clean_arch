@@ -32,6 +32,10 @@ def log_in(request):
         return JsonResponse({'message': 'Invalid credentials','success': False})
     return redirect('index')
 
+@login_required
+def log_out(request):
+    logout(request)
+    return JsonResponse({'message': 'Logout successful','success': True})
 
 def index(request):
     if request.user.is_authenticated:
@@ -104,3 +108,119 @@ def dashboard(request):
     }
 
     return render(request=request, template_name='app/general/dashboard.html', context=context)
+
+
+@login_required
+def create_income(request):
+    if request.method == 'POST':
+        form = IncomeForm(request.POST)
+
+        if form.is_valid():
+            income = form.save(commit=False)
+            income.user = request.user
+            income.save()
+            return JsonResponse({'message': 'Income created successfully', 'success': True})
+        else:
+            return JsonResponse({'message': 'Invalid form data', 'success': False})
+
+    return JsonResponse({'message': 'Invalid request method', 'success': False})
+
+
+
+
+@login_required
+def create_expense(request):
+    if request.method == 'POST':
+        form = ExpenseForm(request.POST)
+
+        if form.is_valid():
+            expense = form.save(commit=False)
+            expense.user = request.user
+            expense.save()
+            return JsonResponse({'message': 'Expense created successfully', 'success': True})
+        else:
+            return JsonResponse({'message': 'Invalid form data', 'success': False})
+
+    return JsonResponse({'message': 'Invalid request method', 'success': False})
+
+
+@login_required
+def create_category(request):
+    if request.method == 'POST':
+        form = CategoryForm(request.POST)
+
+        if form.is_valid():
+            category = form.save(commit=False)
+            category.user = request.user
+            category.save()
+            return JsonResponse({'message': 'Category created successfully', 'success': True})
+        else:
+            return JsonResponse({'message': 'Invalid form data', 'success': False})
+
+    return JsonResponse({'message': 'Invalid request method', 'success': False})
+
+
+@login_required
+def delete_income(request, income_id):
+    if request.method == 'DELETE':
+        try:
+            income = Income.objects.get(id=income_id, user=request.user)
+            income.delete()
+            return JsonResponse({'message': 'Income deleted successfully', 'success': True})
+        except Income.DoesNotExist:
+            return JsonResponse({'message': 'Income not found', 'success': False})
+
+
+@login_required
+def delete_expense(request, expense_id):
+    if request.method == 'DELETE':
+        try:
+            expense = Expense.objects.get(id=expense_id, user=request.user)
+            expense.delete()
+            return JsonResponse({'message': 'Expense deleted successfully', 'success': True})
+        except Expense.DoesNotExist:
+            return JsonResponse({'message': 'Expense not found', 'success': False})
+
+@login_required
+def delete_category(request, category_id):
+    if request.method == 'DELETE':
+        try:
+            category = Category.objects.get(id=category_id, user=request.user)
+            category.delete()
+            return JsonResponse({'message': 'Category deleted successfully', 'success': True})
+        except Category.DoesNotExist:
+            return JsonResponse({'message': 'Category not found', 'success': False})
+
+
+
+@login_required
+def update_record(request, record_type, record_id):
+    if request.method == 'POST':
+        form = RecordForm(request.POST)
+        if record_type == 'income':
+            got_income = Income.objects.filter(user=request.user, id=record_id).last()
+
+            if form.is_valid() and got_income:
+                got_income.amount = form.cleaned_data['amount']
+                got_income.description = form.cleaned_data['description']
+                got_income.category = form.cleaned_data['category']
+                got_income.save()
+                return JsonResponse({'message': 'Income updated successfully', 'success': True})
+        elif record_type == 'expense':
+            got_expense = Expense.objects.filter(user=request.user, id=record_id).last()
+
+            if form.is_valid() and got_expense:
+                got_expense.amount = form.cleaned_data['amount']
+                got_expense.description = form.cleaned_data['description']
+                got_expense.category = form.cleaned_data['category']
+                got_expense.save()
+                return JsonResponse({'message': 'Expense updated successfully', 'success': True})
+        elif record_type == 'category':
+            got_category = Category.objects.filter(user=request.user, id=record_id).last()
+
+            if form.is_valid() and got_category:
+                got_category.name = form.cleaned_data['name']
+                got_category.save()
+                return JsonResponse({'message': 'Category updated successfully', 'success': True})
+        return JsonResponse({'message': 'Record not found', 'success': False})
+    return redirect('dashboard')
