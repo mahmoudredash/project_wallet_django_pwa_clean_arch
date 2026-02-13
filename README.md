@@ -2,6 +2,19 @@
 
 This project is a Django Progressive Web Application (PWA) refactored to follow Clean Architecture principles.
 
+## Project Overview
+
+This application is a personal finance tracker that allows users to manage their income and expenses. It provides features for:
+
+*   **User Authentication**: Secure registration, login, and logout functionalities.
+*   **Category Management**: Users can create, view, update, and delete custom categories for income and expenses.
+*   **Income Tracking**: Record various sources of income with details like amount, source, and date received.
+*   **Expense Tracking**: Log expenditures with details such as amount, category, date incurred, and optional receipt images.
+*   **Dashboard Visualization**: A dashboard to visualize monthly income and expense trends.
+
+The goal is to provide a clean, maintainable, and testable backend for a PWA frontend, ensuring a clear separation of concerns using Clean Architecture.
+
+
 ## Project Structure
 
 The project is structured into the following layers:
