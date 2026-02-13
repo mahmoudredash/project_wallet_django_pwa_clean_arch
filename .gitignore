@@ -1,0 +1,41 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+*.pyd
+*.pyo
+*.egg-info/
+.pytest_cache/
+
+# Distributions and packaging
+.Python
+env/
+venv/
+lib/
+lib64/
+bin/
+include/
+share/
+*.egg
+
+# OS-specific files
+.DS_Store
+.env
+
+# Django files
+*.sqlite3
+/mySite/*.sqlite3
+/media/
+
+# IDE-specific files
+.vscode/
+.idea/
+
+# Editor backup files
+*~
+*.bak
+*.swp
+*.swo
+
+# Project specific files
+/staticfiles/
+.venv/
